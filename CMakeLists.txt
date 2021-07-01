@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.20)
+project( imageToPCD )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( imageToPCD imageToPCD.cpp )
+target_link_libraries( imageToPCD ${OpenCV_LIBS} )
