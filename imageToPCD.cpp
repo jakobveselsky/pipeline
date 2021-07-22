@@ -24,7 +24,7 @@ int main(int argc, char** argv ){
   Ptr<DisparityWLSFilter> wls_filter;
   Mat filtered_disp,solved_disp,solved_filtered_disp;
  
-  Ptr<StereoBM> left_matcher = StereoBM::create(160,255);
+  Ptr<StereoSGBM> left_matcher = StereoSGBM::create(160,255);
   wls_filter = createDisparityWLSFilter(left_matcher);
   Ptr<StereoMatcher> right_matcher = createRightMatcher(left_matcher);
   double lambda = 8000.0;
@@ -36,7 +36,7 @@ int main(int argc, char** argv ){
             
   matching_time = (double)getTickCount();
   left_matcher-> compute(imageLeft, imageRight, left_disp);
-  right_matcher->compute(imageRight, imageLeft, right_disp);
+  right_matcher-> compute(imageRight, imageLeft, right_disp);
   matching_time = ((double)getTickCount() - matching_time)/getTickFrequency();
 
   wls_filter->setLambda(lambda);
@@ -51,9 +51,11 @@ int main(int argc, char** argv ){
   imshow("raw disparity", raw_disp_vis);
   Mat filtered_disp_vis;
   getDisparityVis(filtered_disp,filtered_disp_vis,vis_mult);
-  namedWindow("filtered disparity", WINDOW_AUTOSIZE);
-  
+  namedWindow("filtered disparity", WINDOW_AUTOSIZE); 
   imshow("filtered disparity", filtered_disp_vis);
- 
+
+  Mat XYZ(filtered_disp.size(),CV_32FC3);
+  //reprojectImageTo3D(filtered_disp, XYZ, Q, false);
+
   waitKey(0);
   return 0;}
